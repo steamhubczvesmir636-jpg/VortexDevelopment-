@@ -5,15 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VortexDevelopment™</title>
     <style>
-        /* CSS Styly */
-        body, html {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            height: 100%;
+        /* Základní nastavení */
+        body, html { 
+            margin: 0; 
+            padding: 0; 
+            font-family: Arial, sans-serif; 
+            height: 100%; 
+            overflow: hidden; 
         }
 
+        /* Navigace */
         header {
+            position: relative;
+            z-index: 2;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -22,62 +26,52 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #1a5f9a; /* Modrá Vortex */
+        .logo { font-size: 24px; font-weight: bold; color: #1a5f9a; }
+
+        nav ul { list-style: none; display: flex; gap: 30px; margin: 0; padding: 0; }
+        nav a { text-decoration: none; color: #333; font-weight: bold; font-size: 14px; }
+        .btn-crew { background-color: #ff9800; color: white !important; padding: 10px 20px; border-radius: 5px; }
+
+        /* Video na pozadí */
+        .video-background {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            z-index: -1;
         }
 
-        nav ul {
-            list-style: none;
-            display: flex;
-            gap: 30px;
-            margin: 0;
-            padding: 0;
-        }
-
-        nav a {
-            text-decoration: none;
-            color: #333;
-            font-weight: bold;
-            font-size: 14px;
-        }
-
-        .btn-crew {
-            background-color: #ff9800; /* Oranžová */
-            color: white !important;
-            padding: 10px 20px;
-            border-radius: 5px;
-        }
-
+        /* Hlavní sekce */
         .hero {
             height: 80vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            /* Zde nahraďte 'pozadi.jpg' cestou k vašemu obrázku */
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
             color: white;
             text-align: center;
+            z-index: 1;
+            position: relative;
         }
 
-        .hero h1 { font-size: 4rem; margin-bottom: 20px; }
-
-        .btn-register {
-            background-color: #ff9800;
-            color: white;
-            padding: 15px 30px;
-            text-decoration: none;
-            font-size: 1.2rem;
-            border-radius: 5px;
-            font-weight: bold;
+        .hero h1 { font-size: 4rem; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+        .btn-register { 
+            background-color: #ff9800; 
+            color: white; 
+            padding: 15px 30px; 
+            text-decoration: none; 
+            font-size: 1.2rem; 
+            border-radius: 5px; 
+            font-weight: bold; 
         }
     </style>
 </head>
 <body>
+
+    <video autoplay muted loop playsinline class="video-background">
+        <source src="pozadi.mp4" type="video/mp4">
+        Váš prohlížeč nepodporuje video na pozadí.
+    </video>
 
     <header>
         <div class="logo">VortexDevelopment™</div>
@@ -91,11 +85,9 @@
         </nav>
     </header>
 
-    <main>
-        <div class="hero">
-            <h1>Join today!</h1>
-            <a href="#" class="btn-register">REGISTER NOW</a>
-        </div>
+    <main class="hero">
+        <h1>Join today!</h1>
+        <a href="#" class="btn-register">REGISTER NOW</a>
     </main>
 
 </body>
