@@ -4,40 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VortexDevelopment™</title>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script type="text/javascript">
-        (function(){
-            // SEM VLOŽTE SVŮJ PUBLIC KEY Z EMAILJS
-            emailjs.init("ZDE_VLOZTE_VASI_PUBLIC_KEY");
-        })();
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script>
+        (function(){ emailjs.init("blK1IKYjyQ6PuxSvh"); })();
     </script>
     <style>
-        /* Základní vzhled */
-        body, html { margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; height: 100%; overflow: hidden; }
-
-        /* Video na pozadí */
+        body, html { margin: 0; padding: 0; font-family: Arial, sans-serif; height: 100%; overflow: hidden; }
         .video-background { position: fixed; right: 0; bottom: 0; min-width: 100%; min-height: 100%; z-index: -1; object-fit: cover; }
-
-        /* Navigace */
-        header { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center; padding: 20px 50px; background: rgba(255,255,255,0.95); }
-        .logo { font-size: 26px; font-weight: bold; color: #1a5f9a; letter-spacing: 1px; }
-        nav ul { list-style: none; display: flex; gap: 30px; margin: 0; padding: 0; }
-        nav a { text-decoration: none; color: #333; font-weight: bold; font-size: 14px; transition: color 0.3s; }
-        nav a:hover { color: #1a5f9a; }
-        .btn-crew { background-color: #ff9800; color: white !important; padding: 10px 20px; border-radius: 5px; }
-
-        /* Hlavní sekce */
-        .hero { height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; text-align: center; }
-        .hero h1 { font-size: 4rem; margin-bottom: 20px; text-shadow: 2px 2px 8px rgba(0,0,0,0.5); }
-        .btn-register { background-color: #ff9800; color: white; padding: 15px 40px; text-decoration: none; border-radius: 5px; font-weight: bold; cursor: pointer; border: none; font-size: 1.2rem; transition: background 0.3s; }
-        .btn-register:hover { background-color: #e68900; }
-
-        /* Modální okno */
-        .modal { display: none; position: fixed; z-index: 10; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); }
-        .modal-content { background: white; margin: 10% auto; padding: 40px; width: 320px; border-radius: 12px; animation: slideDown 0.4s; color: #333; text-align: center; position: relative; }
-        @keyframes slideDown { from {transform: translateY(-50px); opacity: 0;} to {transform: translateY(0); opacity: 1;} }
-        input { width: 100%; padding: 12px; margin: 15px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
-        .close { position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; color: #aaa; }
+        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; }
+        .btn { background: #ff9800; color: white; padding: 15px 30px; border: none; cursor: pointer; margin: 5px; border-radius: 5px; }
+        .modal { display: none; position: fixed; z-index: 10; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); }
+        .content { background: white; color: black; margin: 10% auto; padding: 20px; width: 300px; border-radius: 10px; text-align: center; }
+        input { width: 90%; padding: 10px; margin: 5px; }
     </style>
 </head>
 <body>
@@ -46,59 +24,39 @@
         <source src="video.mp4" type="video/mp4">
     </video>
 
-    <header>
-        <div class="logo">VortexDevelopment™</div>
-        <nav>
-            <ul>
-                <li><a href="#">OUR TEAM</a></li>
-                <li><a href="#">POLICIES</a></li>
-                <li><a href="#">COMMUNITY</a></li>
-                <li><a href="#" class="btn-crew">CREW CENTER</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <main class="hero">
-        <h1>Join today!</h1>
-        <button class="btn-register" onclick="openModal()">REGISTER NOW</button>
-    </main>
+    <div class="hero">
+        <h1>VortexDevelopment™</h1>
+        <button class="btn" onclick="show('authModal')">Register / Login</button>
+    </div>
 
     <div id="authModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h2>Sign Up</h2>
-            <input type="email" id="userEmail" placeholder="Enter your email">
-            <button class="btn-register" onclick="sendVerification()">Send Code</button>
-            <p id="status" style="margin-top: 15px; font-size: 14px;"></p>
+        <div class="content">
+            <span onclick="hide('authModal')" style="float:right; cursor:pointer;">&times;</span>
+            <div id="authForm">
+                <h2>Access</h2>
+                <input type="email" id="email" placeholder="Email">
+                <input type="password" id="pass" placeholder="Password">
+                <button class="btn" onclick="handleAuth('login')">Login</button>
+                <button class="btn" onclick="handleAuth('register')">Register</button>
+                <p style="cursor:pointer; color:blue;" onclick="forgotPass()">Forgot Password?</p>
+            </div>
         </div>
     </div>
 
     <script>
-        function openModal() { document.getElementById('authModal').style.display = 'block'; }
-        function closeModal() { document.getElementById('authModal').style.display = 'none'; }
+        function show(id) { document.getElementById(id).style.display = 'block'; }
+        function hide(id) { document.getElementById(id).style.display = 'none'; }
 
-        function sendVerification() {
-            const email = document.getElementById('userEmail').value;
-            const code = Math.floor(100000 + Math.random() * 900000);
-            
-            // Odeslání přes EmailJS
-            emailjs.send("service_0jeaxzq", "template_6jc2oeh", {
-                to_email: email,
-                verification_code: code
-            }).then(() => {
-                document.getElementById('status').innerText = "Verification code sent to your email!";
-                document.getElementById('status').style.color = "green";
-            }).catch(err => {
-                document.getElementById('status').innerText = "Failed to send. Check configuration.";
-                document.getElementById('status').style.color = "red";
-            });
+        function handleAuth(type) {
+            const email = document.getElementById('email').value;
+            alert(type + " initiated for: " + email + "\n(Firebase SDK setup required here)");
         }
 
-        // Zavření při kliknutí mimo okno
-        window.onclick = function(event) {
-            if (event.target == document.getElementById('authModal')) closeModal();
+        function forgotPass() {
+            const email = document.getElementById('email').value;
+            emailjs.send("service_0jeaxzq", "template_tmaxtx4", { to_email: email });
+            alert("Reset link sent to your email!");
         }
     </script>
-
 </body>
 </html>
