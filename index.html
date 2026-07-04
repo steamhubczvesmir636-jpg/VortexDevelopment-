@@ -4,18 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VortexDevelopment™</title>
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script>
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDcsDeaJ5ZwaVcGCRgatT2EIr8m128kT1A",
+            authDomain: "steamhubcz.firebaseapp.com",
+            databaseURL: "https://steamhubcz-default-rtdb.europe-west1.firebaseio.com",
+            projectId: "steamhubcz",
+            storageBucket: "steamhubcz.appspot.com",
+            messagingSenderId: "250948131043",
+            appId: "1:250948131043:web:64ad92869ea45d9ea78dd6",
+            measurementId: "G-R0QXRCC48Y"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        window.auth = getAuth(app);
+    </script>
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
         (function(){ emailjs.init("blK1IKYjyQ6PuxSvh"); })();
     </script>
+
     <style>
-        body, html { margin: 0; padding: 0; font-family: Arial, sans-serif; height: 100%; overflow: hidden; }
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: 'Segoe UI', sans-serif; }
         .video-background { position: fixed; right: 0; bottom: 0; min-width: 100%; min-height: 100%; z-index: -1; object-fit: cover; }
         .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; }
-        .btn { background: #ff9800; color: white; padding: 15px 30px; border: none; cursor: pointer; margin: 5px; border-radius: 5px; }
         .modal { display: none; position: fixed; z-index: 10; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); }
-        .content { background: white; color: black; margin: 10% auto; padding: 20px; width: 300px; border-radius: 10px; text-align: center; }
-        input { width: 90%; padding: 10px; margin: 5px; }
+        .content { background: white; color: #333; margin: 10% auto; padding: 25px; width: 320px; border-radius: 12px; text-align: center; }
+        input { width: 90%; padding: 10px; margin: 5px; border: 1px solid #ccc; border-radius: 5px; }
+        .btn { background: #ff9800; color: white; padding: 10px 20px; border: none; cursor: pointer; margin: 5px; border-radius: 5px; font-weight: bold; width: 90%; }
     </style>
 </head>
 <body>
@@ -26,36 +47,53 @@
 
     <div class="hero">
         <h1>VortexDevelopment™</h1>
-        <button class="btn" onclick="show('authModal')">Register / Login</button>
+        <button class="btn" style="width: auto;" onclick="document.getElementById('authModal').style.display='block'">GET STARTED</button>
     </div>
 
     <div id="authModal" class="modal">
         <div class="content">
-            <span onclick="hide('authModal')" style="float:right; cursor:pointer;">&times;</span>
-            <div id="authForm">
-                <h2>Access</h2>
-                <input type="email" id="email" placeholder="Email">
-                <input type="password" id="pass" placeholder="Password">
-                <button class="btn" onclick="handleAuth('login')">Login</button>
-                <button class="btn" onclick="handleAuth('register')">Register</button>
-                <p style="cursor:pointer; color:blue;" onclick="forgotPass()">Forgot Password?</p>
-            </div>
+            <span onclick="document.getElementById('authModal').style.display='none'" style="float:right; cursor:pointer;">&times;</span>
+            <h2>Account Access</h2>
+            <input type="email" id="email" placeholder="Email">
+            <input type="password" id="pass" placeholder="Password">
+            <button class="btn" onclick="authAction('login')">Login</button>
+            <button class="btn" onclick="authAction('register')">Register</button>
+            <button class="btn" style="background:#1a5f9a;" onclick="sendOTP()">Send OTP</button>
+            <p style="cursor:pointer; color:blue; font-size:12px;" onclick="resetPassword()">Forgot Password?</p>
+            <p id="status"></p>
         </div>
     </div>
 
-    <script>
-        function show(id) { document.getElementById(id).style.display = 'block'; }
-        function hide(id) { document.getElementById(id).style.display = 'none'; }
-
-        function handleAuth(type) {
+    <script type="module">
+        import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+        
+        window.authAction = (type) => {
             const email = document.getElementById('email').value;
-            alert(type + " initiated for: " + email + "\n(Firebase SDK setup required here)");
+            const pass = document.getElementById('pass').value;
+            
+            if(type === 'register') {
+                createUserWithEmailAndPassword(window.auth, email, pass)
+                .then(() => document.getElementById('status').innerText = "Registered!")
+                .catch(e => document.getElementById('status').innerText = e.message);
+            } else {
+                signInWithEmailAndPassword(window.auth, email, pass)
+                .then(() => document.getElementById('status').innerText = "Logged in!")
+                .catch(e => document.getElementById('status').innerText = e.message);
+            }
+        }
+    </script>
+    <script>
+        function sendOTP() {
+            const email = document.getElementById('email').value;
+            const otp = Math.floor(100000 + Math.random() * 900000);
+            emailjs.send("service_0jeaxzq", "template_6jc2oeh", { to_email: email, verification_code: otp })
+                .then(() => alert("OTP sent to your email!"));
         }
 
-        function forgotPass() {
+        function resetPassword() {
             const email = document.getElementById('email').value;
-            emailjs.send("service_0jeaxzq", "template_tmaxtx4", { to_email: email });
-            alert("Reset link sent to your email!");
+            emailjs.send("service_0jeaxzq", "template_tmaxtx4", { to_email: email })
+                .then(() => alert("Reset link sent!"));
         }
     </script>
 </body>
