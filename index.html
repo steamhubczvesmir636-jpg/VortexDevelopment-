@@ -4,34 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VortexDevelopment™</title>
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
         (function(){
-            emailjs.init("VASE_PUBLIC_KEY"); // ZDE VLOŽTE SVŮJ PUBLIC KEY
+            // SEM VLOŽTE SVŮJ PUBLIC KEY Z EMAILJS
+            emailjs.init("ZDE_VLOZTE_VASI_PUBLIC_KEY");
         })();
     </script>
     <style>
-        body, html { margin: 0; padding: 0; font-family: Arial, sans-serif; height: 100%; overflow: hidden; }
+        /* Základní vzhled */
+        body, html { margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; height: 100%; overflow: hidden; }
 
         /* Video na pozadí */
         .video-background { position: fixed; right: 0; bottom: 0; min-width: 100%; min-height: 100%; z-index: -1; object-fit: cover; }
 
         /* Navigace */
-        header { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center; padding: 20px 50px; background: rgba(255,255,255,0.9); }
-        .logo { font-size: 24px; font-weight: bold; color: #1a5f9a; }
-        nav ul { list-style: none; display: flex; gap: 30px; }
-        nav a { text-decoration: none; color: #333; font-weight: bold; }
+        header { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center; padding: 20px 50px; background: rgba(255,255,255,0.95); }
+        .logo { font-size: 26px; font-weight: bold; color: #1a5f9a; letter-spacing: 1px; }
+        nav ul { list-style: none; display: flex; gap: 30px; margin: 0; padding: 0; }
+        nav a { text-decoration: none; color: #333; font-weight: bold; font-size: 14px; transition: color 0.3s; }
+        nav a:hover { color: #1a5f9a; }
         .btn-crew { background-color: #ff9800; color: white !important; padding: 10px 20px; border-radius: 5px; }
 
-        /* Hero sekce */
+        /* Hlavní sekce */
         .hero { height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; text-align: center; }
-        .btn-register { background-color: #ff9800; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; cursor: pointer; border: none; font-size: 1.2rem; }
+        .hero h1 { font-size: 4rem; margin-bottom: 20px; text-shadow: 2px 2px 8px rgba(0,0,0,0.5); }
+        .btn-register { background-color: #ff9800; color: white; padding: 15px 40px; text-decoration: none; border-radius: 5px; font-weight: bold; cursor: pointer; border: none; font-size: 1.2rem; transition: background 0.3s; }
+        .btn-register:hover { background-color: #e68900; }
 
         /* Modální okno */
         .modal { display: none; position: fixed; z-index: 10; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); }
-        .modal-content { background: white; margin: 10% auto; padding: 30px; width: 300px; border-radius: 10px; animation: slideDown 0.4s; color: #333; text-align: center; }
+        .modal-content { background: white; margin: 10% auto; padding: 40px; width: 320px; border-radius: 12px; animation: slideDown 0.4s; color: #333; text-align: center; position: relative; }
         @keyframes slideDown { from {transform: translateY(-50px); opacity: 0;} to {transform: translateY(0); opacity: 1;} }
-        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        input { width: 100%; padding: 12px; margin: 15px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        .close { position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; color: #aaa; }
     </style>
 </head>
 <body>
@@ -59,11 +65,11 @@
 
     <div id="authModal" class="modal">
         <div class="modal-content">
-            <span style="float:right; cursor:pointer;" onclick="closeModal()">&times;</span>
+            <span class="close" onclick="closeModal()">&times;</span>
             <h2>Sign Up</h2>
             <input type="email" id="userEmail" placeholder="Enter your email">
             <button class="btn-register" onclick="sendVerification()">Send Code</button>
-            <p id="status"></p>
+            <p id="status" style="margin-top: 15px; font-size: 14px;"></p>
         </div>
     </div>
 
@@ -75,14 +81,22 @@
             const email = document.getElementById('userEmail').value;
             const code = Math.floor(100000 + Math.random() * 900000);
             
+            // Odeslání přes EmailJS
             emailjs.send("service_0jeaxzq", "template_6jc2oeh", {
                 to_email: email,
                 verification_code: code
             }).then(() => {
-                document.getElementById('status').innerText = "Verification code sent!";
+                document.getElementById('status').innerText = "Verification code sent to your email!";
+                document.getElementById('status').style.color = "green";
             }).catch(err => {
-                document.getElementById('status').innerText = "Error!";
+                document.getElementById('status').innerText = "Failed to send. Check configuration.";
+                document.getElementById('status').style.color = "red";
             });
+        }
+
+        // Zavření při kliknutí mimo okno
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('authModal')) closeModal();
         }
     </script>
 
